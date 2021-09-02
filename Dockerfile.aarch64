@@ -1,4 +1,4 @@
-FROM ghcr.io/linuxserver/baseimage-mono:arm64v8-LTS
+FROM ghcr.io/linuxserver/baseimage-mono:LTS
 
 # set version label
 ARG BUILD_DATE
@@ -19,13 +19,9 @@ RUN \
     jq && \
   echo "**** install sonarr ****" && \
   mkdir -p /app/sonarr/bin && \
-  if [ -z ${SONARR_VERSION+x} ]; then \
-    SONARR_VERSION=$(curl -sX GET http://services.sonarr.tv/v1/releases \
-    | jq -r ".[] | select(.branch==\"$SONARR_BRANCH\") | .version"); \
-  fi && \
   curl -o \
     /tmp/sonarr.tar.gz -L \
-    "https://download.sonarr.tv/v3/${SONARR_BRANCH}/${SONARR_VERSION}/Sonarr.${SONARR_BRANCH}.${SONARR_VERSION}.linux.tar.gz" && \
+    "https://github.com/hcourthias/Sonarr/releases/download/v3.0.6.1266/Linux.tgz" && \
   tar xf \
     /tmp/sonarr.tar.gz -C \
     /app/sonarr/bin --strip-components=1 && \
@@ -41,5 +37,4 @@ RUN \
 COPY root/ /
 
 # ports and volumes
-EXPOSE 8989
 VOLUME /config
